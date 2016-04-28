@@ -1,0 +1,22 @@
+{
+  "name": "back-dress-and-go",
+  "version": "1.0.0",
+  "description": "Backend test for dress and go",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flpms/back-dress-and-go.git"
+  },
+  "author": "Filipe M. Silva",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/flpms/back-dress-and-go/issues"
+  },
+  "homepage": "https://github.com/flpms/back-dress-and-go#readme",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
+}
