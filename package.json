@@ -4,6 +4,8 @@
   "description": "Backend test for dress and go",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint /controller/user/ /controller/auth/ /model/user/ /service/ *.js",,
+    "pretest": "npm run lint",
     "test": "mocha --recursive"
   },
   "repository": {
