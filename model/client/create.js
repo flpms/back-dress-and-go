@@ -32,7 +32,7 @@ let create = function(client) {
             email: client.email,
             password: client.password,
             postalCode: client.postalCode.replace(/\-/gi, ''),
-            addressNumber: client.addressNumber,
+            addressNumber: client.number,
             cellPhone: client.cellPhone,
             height: client.height,
             hip: client.hip,
@@ -54,9 +54,11 @@ let create = function(client) {
             }
 
             connection.query('INSERT INTO client SET ?', validatedClient, (clientErr, clientResult) => {
-                if (clientErr) { console.log('- - - 57', clientErr);
+                if (clientErr) {
                     return reject(clientErr);
                 }
+
+                connection.end();
 
                 return resolve({address: result, client: clientResult});
             });

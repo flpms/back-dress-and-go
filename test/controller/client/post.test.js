@@ -2,7 +2,7 @@
 
 const chai = require('chai');
 const assert = require('assert');
-const DB = require('mysql');
+const mysql = require('mysql');
 
 const client = require('../../../controller/client/');
 const expect = chai.expect;
@@ -11,30 +11,28 @@ describe('Controller client test', function() {
 
     let connection;
 
-    before(function(done) {
+    before(function() {
+        global.environment = 'test';
 
-        var collection;
-        connection = DB.createConnection({
+        connection = mysql.createConnection({
             "host": "localhost",
             "user": "root",
             "password": "2016@admin",
-            "multipleStatements": true
+            "multipleStatements": true,
+            "database": "test_dress_and_go"
         });
 
-        connection.connect(function(err, result) {
-            if (err) {
-                console.error(err);
-                return;
-            }
-        });
+        connection.connect();
 
-        connection.query('CREATE DATABASE IF NOT EXISTS dress_and_go_test; USE dress_and_go_test', function(err, results) {
-            if (err) {
-                console.error(err);
-            }
+        connection.query(`
+            SET FOREIGN_KEY_CHECKS=0;
+            TRUNCATE TABLE client;
+            TRUNCATE TABLE addresses;
+            TRUNCATE TABLE rents;
+            TRUNCATE TABLE dress;
+            SET FOREIGN_KEY_CHECKS=1;`);
 
-            done();
-        });
+        connection.end();
     });
 
     it('Expected sucess cause client is a function', function() {
@@ -88,6 +86,32 @@ describe('Controller client test', function() {
         client.create(req, res);
     });
 
+    it('Expected a failure when create client, name field is a wrong type', function(done) {
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode;
+                return this;
+            },
+            send: function(err) {
+
+                expect(this.statusCode).to.equal(400);
+                expect(this.statusCode).to.be.a('number');
+
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('{"name": "string"} is required field');
+
+                done();
+            }
+        };
+
+        var req = {
+            body: { email: 'keila@dressandgo.com.br', name: 345 }
+        };
+
+        client.create(req, res);
+    });
+
     it('Expected a failure when create client, cause missing email in parameters', function(done) {
         var res = {
             status: function(statusCode) {
@@ -108,6 +132,31 @@ describe('Controller client test', function() {
 
         var req = {
             body: { name: 'Keila'}
+        };
+
+        client.create(req, res);
+    });
+
+    it('Expected a failure when create client, email field is wrong type', function(done) {
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode;
+                return this;
+            },
+            send: function(err) {
+
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(400);
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('{"email": "string"} is required field');
+
+                done();
+            }
+        };
+
+        var req = {
+            body: { name: 'Keila', email: 434343 }
         };
 
         client.create(req, res);
@@ -142,6 +191,36 @@ describe('Controller client test', function() {
         client.create(req, res);
     });
 
+    it('Expected a failure when create client, password is wrong type', function(done) {
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode;
+                return this;
+            },
+            send: function(err) {
+
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(400);
+
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('{"password": "string"} is required field');
+
+                done();
+            }
+        };
+
+        var req = {
+            body: {
+                name: 'Keila',
+                email: 'keila@dressandgo.com.br',
+                password: true
+            }
+        };
+
+        client.create(req, res);
+    });
+
     it('Expected a failure when create client, cause missing address in parameters', function(done) {
 
         var res = {
@@ -166,6 +245,37 @@ describe('Controller client test', function() {
                 name: 'Keila',
                 email: 'keila@dressandgo.com.br',
                 password: 'Senha123Forte'
+            }
+        };
+
+        client.create(req, res);
+    });
+
+    it('Expected a failure when create client, address field is wrong type', function(done) {
+
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode;
+                return this;
+            },
+            send: function(err) {
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(400);
+
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('{"address": "string"} is required field');
+
+                done();
+            }
+        };
+
+        var req = {
+            body: {
+                name: 'Keila',
+                email: 'keila@dressandgo.com.br',
+                password: 'Senha123Forte',
+                address: true
             }
         };
 
@@ -203,6 +313,38 @@ describe('Controller client test', function() {
         client.create(req, res);
     });
 
+    it('Expected a failure when create client, address number is wrong type', function(done) {
+
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode;
+                return this;
+            },
+            send: function(err) {
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(400);
+
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('{"number": number} is required field');
+
+                done();
+            }
+        };
+
+        var req = {
+            body: {
+                name: 'Keila',
+                email: 'keila@dressandgo.com.br',
+                password: 'Senha123Forte',
+                address: 'Rua Santa Justina',
+                number: true
+            }
+        };
+
+        client.create(req, res);
+    });
+
     it('Expected a failure when create client, cause missing city in parameters', function(done) {
 
         var res = {
@@ -228,7 +370,40 @@ describe('Controller client test', function() {
                 email: 'keila@dressandgo.com.br',
                 password: 'Senha123Forte',
                 address: 'Rua Santa Justina',
-                number: '352'
+                number: 352
+            }
+        };
+
+        client.create(req, res);
+    });
+
+    it('Expected a failure when create client, city is wrong type', function(done) {
+
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode;
+                return this;
+            },
+            send: function(err) {
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(400);
+
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('{"city": "string"} is required field');
+
+                done();
+            }
+        };
+
+        var req = {
+            body: {
+                name: 'Keila',
+                email: 'keila@dressandgo.com.br',
+                password: 'Senha123Forte',
+                address: 'Rua Santa Justina',
+                number: 352,
+                city: {}
             }
         };
 
@@ -260,8 +435,42 @@ describe('Controller client test', function() {
                 email: 'keila@dressandgo.com.br',
                 password: 'Senha123Forte',
                 address: 'Rua Santa Justina',
-                number: '352',
+                number: 352,
                 city: 'São Paulo'
+            }
+        };
+
+        client.create(req, res);
+    });
+
+    it('Expected a failure when create client, state is wrong type', function(done) {
+
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode;
+                return this;
+            },
+            send: function(err) {
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(400);
+
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('{"state": "string"} is required field');
+
+                done();
+            }
+        };
+
+        var req = {
+            body: {
+                name: 'Keila',
+                email: 'keila@dressandgo.com.br',
+                password: 'Senha123Forte',
+                address: 'Rua Santa Justina',
+                number: 352,
+                city: 'São Paulo',
+                state: true
             }
         };
 
@@ -281,7 +490,7 @@ describe('Controller client test', function() {
 
                 expect(err).to.be.a('object');
                 expect(err).to.have.property('message');
-                expect(err.message).to.equal('{"postalCode": "string"} code is required field');
+                expect(err.message).to.equal('{"postalCode": "string"} is required field');
 
                 done();
             }
@@ -293,9 +502,45 @@ describe('Controller client test', function() {
                 email: 'keila@dressandgo.com.br',
                 password: 'Senha123Forte',
                 address: 'Rua Santa Justina',
-                number: '352',
+                number: 352,
                 city: 'São Paulo',
-                state: "SP"
+                state: 'SP'
+            }
+        };
+
+        client.create(req, res);
+    });
+
+    it('Expected a failure when create client, postalCode is wrong type', function(done) {
+
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode
+                return this;
+            },
+            send: function(err) {
+
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(400);
+
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('{"postalCode": "string"} is required field');
+
+                done();
+            }
+        };
+
+        var req = {
+            body: {
+                name: 'Keila',
+                email: 'keila@dressandgo.com.br',
+                password: 'Senha123Forte',
+                address: 'Rua Santa Justina',
+                number: 352,
+                city: 'São Paulo',
+                state: 'SP',
+                postalCode: 4545041
             }
         };
 
@@ -328,10 +573,46 @@ describe('Controller client test', function() {
                 email: 'keila@dressandgo.com.br',
                 password: 'Senha123Forte',
                 address: 'Rua Santa Justina',
-                number: '352',
+                number: 352,
                 city: 'São Paulo',
-                state: "SP",
-                postalCode: "04545-041"
+                state: 'SP',
+                postalCode: '04545-041'
+            }
+        };
+
+        client.create(req, res);
+    });
+
+    it('Expected a failure when create client, cellPhone is wrong type', function(done) {
+
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode
+                return this;
+            },
+            send: function(err) {
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(400);
+
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('{"cellPhone": number} is required field');
+
+                done();
+            }
+        };
+
+        var req = {
+            body: {
+                name: 'Keila',
+                email: 'keila@dressandgo.com.br',
+                password: 'Senha123Forte',
+                address: 'Rua Santa Justina',
+                number: 352,
+                city: 'São Paulo',
+                state: 'SP',
+                postalCode: '04545-041',
+                cellPhone: '1130454006'
             }
         };
 
@@ -363,11 +644,49 @@ describe('Controller client test', function() {
                 email: 'keila@dressandgo.com.br',
                 password: 'Senha123Forte',
                 address: 'Rua Santa Justina',
-                number: '352',
+                number: 352,
                 city: 'São Paulo',
                 state: "SP",
-                postalCode: "04545-041",
+                postalCode: '04545-041',
                 cellPhone: 1130454006
+            }
+        };
+
+        client.create(req, res);
+    });
+
+    it('Expected a failure when create client, height is wrong type', function(done) {
+
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode
+                return this;
+            },
+            send: function(err) {
+
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(400);
+
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('{"height": number} is required field');
+
+                done();
+            }
+        };
+
+        var req = {
+            body: {
+                name: 'Keila',
+                email: 'keila@dressandgo.com.br',
+                password: 'Senha123Forte',
+                address: 'Rua Santa Justina',
+                number: 352,
+                city: 'São Paulo',
+                state: 'SP',
+                postalCode: '04545-041',
+                cellPhone: 1130454006,
+                height: '158'
             }
         };
 
@@ -400,12 +719,51 @@ describe('Controller client test', function() {
                 email: 'keila@dressandgo.com.br',
                 password: 'Senha123Forte',
                 address: 'Rua Santa Justina',
-                number: '352',
+                number: 352,
                 city: 'São Paulo',
-                state: "SP",
-                postalCode: "04545-041",
+                state: 'SP',
+                postalCode: '04545-041',
                 cellPhone: 1130454006,
                 height: 158
+            }
+        };
+
+        client.create(req, res);
+    });
+
+    it('Expected a failure when create client, bust is wrong type', function(done) {
+
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode
+                return this;
+            },
+            send: function(err) {
+
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(400);
+
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('{"bust": number} is required field');
+
+                done();
+            }
+        };
+
+        var req = {
+            body: {
+                name: 'Keila',
+                email: 'keila@dressandgo.com.br',
+                password: 'Senha123Forte',
+                address: 'Rua Santa Justina',
+                number: 352,
+                city: 'São Paulo',
+                state: 'SP',
+                postalCode: '04545-041',
+                cellPhone: 1130454006,
+                height: 158,
+                bust: '80'
             }
         };
 
@@ -438,13 +796,53 @@ describe('Controller client test', function() {
                 email: 'keila@dressandgo.com.br',
                 password: 'Senha123Forte',
                 address: 'Rua Santa Justina',
-                number: '352',
+                number: 352,
                 city: 'São Paulo',
-                state: "SP",
-                postalCode: "04545-041",
+                state: 'SP',
+                postalCode: '04545-041',
                 cellPhone: 1130454006,
                 height: 158,
                 bust: 80
+            }
+        };
+
+        client.create(req, res);
+    });
+
+    it('Expected a failure when create client, hip is wrong type', function(done) {
+
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode
+                return this;
+            },
+            send: function(err) {
+
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(400);
+
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('{"hip": number} is required field');
+
+                done();
+            }
+        };
+
+        var req = {
+            body: {
+                name: 'Keila',
+                email: 'keila@dressandgo.com.br',
+                password: 'Senha123Forte',
+                address: 'Rua Santa Justina',
+                number: 352,
+                city: 'São Paulo',
+                state: 'SP',
+                postalCode: '04545-041',
+                cellPhone: 1130454006,
+                height: 158,
+                bust: 80,
+                hip: '98'
             }
         };
 
@@ -477,14 +875,55 @@ describe('Controller client test', function() {
                 email: 'keila@dressandgo.com.br',
                 password: 'Senha123Forte',
                 address: 'Rua Santa Justina',
-                number: '352',
+                number: 352,
                 city: 'São Paulo',
-                state: "SP",
-                postalCode: "04545-041",
+                state: 'SP',
+                postalCode: '04545-041',
                 cellPhone: 1130454006,
                 height: 158,
                 bust: 80,
                 hip: 98
+            }
+        };
+
+        client.create(req, res);
+    });
+
+    it('Expected a failure when create client, waist is wrong type', function(done) {
+
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode
+                return this;
+            },
+            send: function(err) {
+
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(400);
+
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('{"waist": number} is required field');
+
+                done();
+            }
+        };
+
+        var req = {
+            body: {
+                name: 'Keila',
+                email: 'keila@dressandgo.com.br',
+                password: 'Senha123Forte',
+                address: 'Rua Santa Justina',
+                number: 352,
+                city: 'São Paulo',
+                state: 'SP',
+                postalCode: '04545-041',
+                cellPhone: 1130454006,
+                height: 168,
+                bust: 80,
+                hip: 78,
+                waist: '68'
             }
         };
 
@@ -517,15 +956,56 @@ describe('Controller client test', function() {
                 email: 'keila@dressandgo.com.br',
                 password: 'Senha123Forte',
                 address: 'Rua Santa Justina',
-                number: '352',
+                number: 352,
                 city: 'São Paulo',
-                state: "SP",
-                postalCode: "04545-041",
+                state: 'SP',
+                postalCode: '04545-041',
                 cellPhone: 1130454006,
                 height: 168,
                 bust: 80,
                 hip: 78,
                 waist: 68
+            }
+        };
+
+        client.create(req, res);
+    });
+
+    it('Expected a failure when create client, heelSize is wrong type', function(done) {
+
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode
+                return this;
+            },
+            send: function(err) {
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(400);
+
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('{"heelSize": number} is required field');
+
+                done();
+            }
+        };
+
+        var req = {
+            body: {
+                name: 'Keila',
+                email: 'keila@dressandgo.com.br',
+                password: 'Senha123Forte',
+                address: 'Rua Santa Justina',
+                number: 352,
+                city: 'São Paulo',
+                state: 'SP',
+                postalCode: '04545-041',
+                cellPhone: 1130454006,
+                height: 168,
+                bust: 80,
+                hip: 78,
+                waist: 68,
+                heelSize: '10'
             }
         };
 
@@ -557,7 +1037,48 @@ describe('Controller client test', function() {
                 email: 'keila@dressandgo.com.br',
                 password: 'Senha123Forte',
                 address: 'Rua Santa Justina',
-                number: '352',
+                number: 352,
+                city: 'São Paulo',
+                state: 'SP',
+                postalCode: '04545-041',
+                cellPhone: 1130454006,
+                height: 168,
+                bust: 80,
+                hip: 78,
+                waist: 68,
+                heelSize: 10
+            }
+        };
+
+        client.create(req, res);
+    });
+
+    it('Expected a failure when create client, size is wrong type', function(done) {
+
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode
+                return this;
+            },
+            send: function(err) {
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(400);
+
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('{"size": number} is required field');
+
+                done();
+            }
+        };
+
+        var req = {
+            body: {
+                name: 'Keila',
+                email: 'keila@dressandgo.com.br',
+                password: 'Senha123Forte',
+                address: 'Rua Santa Justina',
+                number: 352,
                 city: 'São Paulo',
                 state: "SP",
                 postalCode: "04545-041",
@@ -566,7 +1087,8 @@ describe('Controller client test', function() {
                 bust: 80,
                 hip: 78,
                 waist: 68,
-                heelSize: 10
+                heelSize: 10,
+                size: '45'
             }
         };
 
@@ -581,12 +1103,13 @@ describe('Controller client test', function() {
                 email: 'keila@dressandgo.com.br',
                 password: 'Senha123Forte',
                 address: 'Rua Santa Justina',
-                number: '352',
+                number: 352,
                 city: 'São Paulo',
-                state: "SP",
-                postalCode: "04545-041",
+                state: 'SP',
+                postalCode: '04545-041',
                 cellPhone: 1130454006,
                 height: 168,
+                bust: 80,
                 hip: 78,
                 waist: 68,
                 heelSize: 10,
@@ -601,15 +1124,9 @@ describe('Controller client test', function() {
             },
             send(obj) {
                 expect(obj).to.be.a('object');
-                expect(obj).to.have.property('nome');
-                expect(obj).to.have.property('email');
-                expect(obj).to.have.property('senha');
-                expect(obj).to.have.property('telefones');
-                expect(obj).to.have.property('id');
-                expect(obj).to.have.property('data_criacao');
-                expect(obj).to.have.property('data_atualizacao');
-                expect(obj).to.have.property('ultimo_login');
-                expect(obj).to.have.property('token');
+                expect(obj).to.have.property('status');
+                expect(obj).to.have.property('message');
+                expect(obj).to.have.property('client');
                 expect(this.statusCode).to.equal(200);
 
                 done();
@@ -617,40 +1134,5 @@ describe('Controller client test', function() {
         };
 
         client.create(req, res);
-    });
-
-    it('Expected a failure when create client, cause missing "email" exist', function(done) {
-        this.timeout(5000);
-        var res = {
-            status: function(statusCode) {
-                this.statusCode = statusCode
-                return this;
-            },
-            send: function(err) {
-                expect(err).to.be.a('object');
-                expect(err).to.have.property('mensagem');
-                expect(err.mensagem).to.equal('email já existente');
-                expect(this.statusCode).to.be.a('number');
-                expect(this.statusCode).to.equal(409);
-                done();
-            }
-        };
-
-        var req = {
-            body: {
-                nome: 'Filipe M. Silva',
-                email: 'filipe@filipe.com',
-                senha: 'Senha123Forte',
-                telefones: [{ numero: "123456789", ddd: "11" }]
-            }
-        };
-
-        client.create(req, res);
-    });
-
-    after(function(done){
-
-        connection.query('DROP DATABASE IF EXISTS dress_and_go_test');
-        connection.close();
     });
 });
