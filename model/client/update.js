@@ -25,7 +25,7 @@ let update = function(email, client) {
         let fields = '';
 
         for (let key in client) {
-            fields += fields === '' ? ', ' : '';
+            fields += fields === '' ? '' : ', ';
             fields += `${key}='${client[key]}'`;
         }
 
