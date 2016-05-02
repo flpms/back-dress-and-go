@@ -13,7 +13,7 @@ describe('Controller client test', function() {
     before(function() {
         global.environment = 'test';
 
-        connection = mysql.createConnection({
+        let connection = mysql.createConnection({
             "host": "localhost",
             "user": "root",
             "password": "2016@admin",
@@ -23,19 +23,11 @@ describe('Controller client test', function() {
 
         connection.connect();
 
-        connection.query(`
-            SET FOREIGN_KEY_CHECKS=0;
-            TRUNCATE TABLE client;
-            TRUNCATE TABLE addresses;
-            TRUNCATE TABLE rents;
-            TRUNCATE TABLE dress;
-            SET FOREIGN_KEY_CHECKS=1;
-            INSERT INTO client SET name=Keila, email=keila@dressandgo.com,
-                password=2A1B0C6D, postalCode=09111-620, addressNumber=80,
-                cellPhone=11964316820, height=158, hip=78, waist=68, heelSize=10, size=40;
-            INSERT INTO addresses SET ;
-            `);
-
+        connection.query('SET FOREIGN_KEY_CHECKS=0; TRUNCATE TABLE client; TRUNCATE TABLE addresses;' +
+        'INSERT INTO client(`name`, `email`, `password`, `postalCode`, `addressNumber`, `cellPhone`, `height`, `hip`, `waist`, `heelSize`, `size`)' +
+        'VALUES(\'Keila\', \'keila@dressandgo.com.br\', \'Senha123Forte\', \'04545041\', \'352\', 1130454006, 168, 78, 68, 10, 40);' +
+        'INSERT INTO addresses(`postalCode`, `street`, `city`, `state`) VALUES(\'04545041\', \'Rua Santa Justina\', \'São Paulo\', \'SP\');' +
+        'SET FOREIGN_KEY_CHECKS=1;');
 
         connection.end();
     });
@@ -65,24 +57,47 @@ describe('Controller client test', function() {
         client.find({params: ''}, res);
     });
 
-    it('Expected a failure when find client, cause empty id', function(done) {
+    it('Expected a failure when find client, cause empty email', function(done) {
         var res = {
             status: function(statusCode) {
                 this.statusCode = statusCode
                 return this;
             },
             send: function(err) {
+
                 expect(this.statusCode).to.be.a('number');
                 expect(this.statusCode).to.equal(400);
 
                 expect(err).to.be.a('object');
                 expect(err).to.have.property('message');
-                expect(err.message).to.equal('Client id not informed');
+                expect(err.message).to.equal('{"email": "string"} is required field');
 
                 done();
             }
         };
 
-        client.find({params: ''}, res);
+        client.find({ params: { email: '' } }, res);
+    });
+
+    it('Expected sucess when find client, cause empty id', function(done) {
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode
+                return this;
+            },
+            send: function(result) {
+
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(200);
+
+                expect(result).to.be.a('object');
+                expect(result).to.have.property('status');
+                expect(result.status).to.equal('ok');
+
+                done();
+            }
+        };
+
+        client.find({ params: { email: 'filipemelodasilva@gmail.com' } }, res);
     });
 });

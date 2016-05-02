@@ -2,7 +2,7 @@
 
 const Client = require('../../model/client');
 
-const create = function(req, res) {
+const get = function(req, res) {
 
     let fail = err => {
         if (err.statusCode) {
@@ -18,13 +18,13 @@ const create = function(req, res) {
 
     let client = req.params.email;
 
-    if (!client.email || typeof client.email !== 'string') {
+    if (!client || typeof client !== 'string') {
         return fail({ statusCode: 400, message: '{"email": "string"} is required field' });
     }
 
-    Client.create(client).then(result => {
-        res.status(200).send({status: 'ok', message: 'inserted with sucess', client: client});
-    }).catch(err => fail(err));
+    Client.find(client).then(result => {
+        res.status(200).send({ status: 'ok', client: result[0]});
+    }).catch(fail);
 };
 
-module.exports = create;
+module.exports = get;
