@@ -17,14 +17,14 @@ let find = function(clientEmail) {
         let sql = 'SELECT * FROM `client` INNER JOIN `addresses` ON client.postalCode=addresses.postalCode WHERE `email`=?;';
         let searchSQL = mysql.format(sql, clientEmail);
 
-        connection.query(searchSQL, (err, rows, fields) => {
+        connection.query(searchSQL, (err, result) => {
             if (err) {
                 return reject(err);
             }
 
             connection.end();
 
-            return resolve(rows);
+            return resolve(result);
         });
     });
 
