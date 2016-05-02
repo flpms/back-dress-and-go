@@ -27,19 +27,20 @@ let create = function(client) {
             });
         }
 
-        let addressQuery = 'INSERT INTO addresses(postalCode, street, city, state) VALUES(?, ?, ?, ?);';
+        let addressQuery = 'INSERT INTO addresses(`postalCode`, `street`, `city`, `state`) VALUES(?, ?, ?, ?);';
         let addressValues = [client.postalCode.replace(/\-/gi, ''), client.address, client.city, client.state];
 
-        let clientQuery = `INSERT INTO client(name, email, password, postalCode, addressNumber, cellPhone, height, hip, waist, heelSize, size)
-        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+        let clientQuery = 'INSERT INTO client('+
+        '`name`,`email`, `password`, `postalCode`, `addressNumber`, `cellPhone`, `height`, `hip`, `waist`, `heelSize`, `size`)' +
+        'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);';
 
         let clientValues = [client.name, client.email, client.password, client.postalCode.replace(/\-/gi, ''),
                                 client.number, client.cellPhone, client.height, client.hip,
                                 client.waist, client.heelSize, client.size ];
 
-        let addressSQL = mysql.format(addressQuery, addressValue);
-
+        let addressSQL = mysql.format(addressQuery, addressValues);
         let clientSQL = mysql.format(clientQuery, clientValues);
+
         connection.query(`${addressSQL}`, (err, result) => {
             if (err) {
                 return reject({statusCode: 503, message: err.code});

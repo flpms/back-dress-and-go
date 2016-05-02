@@ -78,7 +78,7 @@ const create = function(req, res) {
         return fail({statusCode: 400, message: '{"size": number} is required field' });
     }
 
-    Client.create(client).then(result => {
+    Client.create(client).then(() => {
         res.status(200).send({status: 'ok', message: 'inserted with sucess', client: client});
     }).catch(err => fail(err));
 };
