@@ -2,7 +2,7 @@
 
 const Client = require('../../model/client');
 
-const get = function(req, res) {
+const find = function(req, res) {
 
     let fail = err => {
         if (err.statusCode) {
@@ -27,4 +27,4 @@ const get = function(req, res) {
     }).catch(fail);
 };
 
-module.exports = get;
+module.exports = find;

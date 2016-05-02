@@ -2,7 +2,7 @@
 
 const Client = require('../../model/client');
 
-const create = function(req, res) {
+const update = function(req, res) {
 
     let fail = err => {
         if (err.statusCode) {
@@ -84,4 +84,4 @@ const create = function(req, res) {
     }).catch(err => fail(err));
 };
 
-module.exports = create;
+module.exports = update;
