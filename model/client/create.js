@@ -27,33 +27,25 @@ let create = function(client) {
             });
         }
 
-        let validatedClient = {
-            name: client.name,
-            email: client.email,
-            password: client.password,
-            postalCode: client.postalCode.replace(/\-/gi, ''),
-            addressNumber: client.number,
-            cellPhone: client.cellPhone,
-            height: client.height,
-            hip: client.hip,
-            waist: client.waist,
-            heelSize: client.heelSize,
-            size: client.size
-        };
+        let addressQuery = 'INSERT INTO addresses(postalCode, street, city, state) VALUES(?, ?, ?, ?);';
+        let addressValue = [client.postalCode.replace(/\-/gi, ''), client.address, client.city, client.state];
 
-        let validatedAddress = {
-            postalCode: client.postalCode.replace(/\-/gi, ''),
-            street: client.street,
-            city: client.city,
-            state: client.state
-        };
+        let clientQuery = `INSERT INTO client(name, email, password, postalCode, addressNumber, cellPhone, height, hip, waist, heelSize, size)
+        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
 
-        connection.query('INSERT INTO addresses SET ? ', validatedAddress, (err, result) => {
+        let clientValues = [client.name, client.email, client.password, client.postalCode.replace(/\-/gi, ''),
+                                client.number, client.cellPhone, client.height, client.hip,
+                                client.waist, client.heelSize, client.size ];
+
+        let addressSQL = mysql.format(addressQuery, addressValue);
+
+        let clientSQL = mysql.format(clientQuery, clientValues);
+        connection.query(`${addressSQL}`, (err, result) => {
             if (err) {
                 return reject({statusCode: 503, message: err.code});
             }
 
-            connection.query('INSERT INTO client SET ?', validatedClient, (clientErr, clientResult) => {
+            connection.query(`${clientSQL}`, (clientErr, clientResult) => {
                 if (clientErr) {
                     return reject(clientErr);
                 }

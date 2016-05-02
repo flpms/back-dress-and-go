@@ -22,12 +22,9 @@ describe('Creating Client', function() {
 
         connection.connect();
 
-        connection.query(`
-            SET FOREIGN_KEY_CHECKS=0;
+        connection.query(`SET FOREIGN_KEY_CHECKS=0;
             TRUNCATE TABLE client;
             TRUNCATE TABLE addresses;
-            TRUNCATE TABLE rents;
-            TRUNCATE TABLE dress;
             SET FOREIGN_KEY_CHECKS=1;`);
 
         connection.end();
