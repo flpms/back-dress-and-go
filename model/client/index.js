@@ -13,8 +13,8 @@ module.exports = {
     find(client) {
         return find.call({context: this, config: config.db[global.environment]}, client);
     },
-    update(client) {
-        return update.call({context: this, config: config.db[global.environment]}, client);
+    update(email, client) {
+        return update.call({context: this, config: config.db[global.environment]}, email, client);
     },
     del(client) {
         return del.call({context: this, config: config.db[global.environment]}, client);
