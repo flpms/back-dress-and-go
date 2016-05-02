@@ -28,7 +28,7 @@ let create = function(client) {
         }
 
         let addressQuery = 'INSERT INTO addresses(postalCode, street, city, state) VALUES(?, ?, ?, ?);';
-        let addressValue = [client.postalCode.replace(/\-/gi, ''), client.address, client.city, client.state];
+        let addressValues = [client.postalCode.replace(/\-/gi, ''), client.address, client.city, client.state];
 
         let clientQuery = `INSERT INTO client(name, email, password, postalCode, addressNumber, cellPhone, height, hip, waist, heelSize, size)
         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
