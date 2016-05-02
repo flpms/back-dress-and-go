@@ -2,7 +2,7 @@
 
 const mysql = require('mysql');
 
-let find = function(clientEmail) {
+let del = function(clientEmail) {
 
     let connection = mysql.createConnection(this.config);
 
@@ -14,7 +14,7 @@ let find = function(clientEmail) {
             return reject({ statusCode: 400, message: 'Need be email to delete a client' });
         }
 
-        let sql = 'UPDATE client SET `deleted`=1 WHERE `email`=?;';
+        let sql = 'UPDATE client SET `deleted`=\'1\' WHERE `email`=?;';
 
         connection.query(sql, clientEmail, (err, rows) => {
             if (err) {
@@ -30,4 +30,4 @@ let find = function(clientEmail) {
     return promise;
 };
 
-module.exports = find;
+module.exports = del;
