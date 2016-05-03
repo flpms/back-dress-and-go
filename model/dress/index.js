@@ -4,18 +4,19 @@ const create = require('./create.js');
 const find = require('./find.js');
 const update = require('./update.js');
 const del = require('./delete.js');
+const config = require('../../config/data.json');
 
 module.exports = {
-    create(client) {
-        return ;
+    create(dress) {
+        return create.call({context: this, config: config.db[global.environment]}, dress);
     },
-    find(client) {
-        return ;
+    find(dress) {
+        return find.call({context: this, config: config.db[global.environment]}, dress);
     },
-    update(client) {
-        return ;
+    update(id, dress) {
+        return update.call({context: this, config: config.db[global.environment]}, id, dress);
     },
-    del(client) {
-        return ;
+    del(dress) {
+        return del.call({context: this, config: config.db[global.environment]}, dress);
     }
-}
+};
