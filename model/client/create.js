@@ -27,33 +27,51 @@ let create = function(client) {
             });
         }
 
-        let addressQuery = 'INSERT INTO addresses(`postalCode`, `street`, `city`, `state`) VALUES(?, ?, ?, ?);';
-        let addressValues = [client.postalCode.replace(/\-/gi, ''), client.address, client.city, client.state];
+        let postalCode = client.postalCode.replace(/\-/gi, '');
+        let selectPostalCode = 'SELECT * FROM `addresses` WHERE `postalCode`=?;';
+        let selectSQL = mysql.format(selectPostalCode, postalCode);
 
-        let clientQuery = 'INSERT INTO client(' +
-        '`name`,`email`, `password`, `postalCode`, `addressNumber`, `cellPhone`, `height`, `hip`, `waist`, `heelSize`, `size`)' +
-        'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);';
-
-        let clientValues = [client.name, client.email, client.password, client.postalCode.replace(/\-/gi, ''),
-                                client.number, client.cellPhone, client.height, client.hip,
-                                client.waist, client.heelSize, client.size];
-
-        let addressSQL = mysql.format(addressQuery, addressValues);
-        let clientSQL = mysql.format(clientQuery, clientValues);
-
-        connection.query(`${addressSQL}`, (err, result) => {
+        connection.query(selectSQL, (err, resultPostalCode) => {
             if (err) {
-                return reject({statusCode: 503, message: err.code});
+                return reject({
+                    statusCode: 400,
+                    message: 'error in search postalCode'
+                });
             }
 
-            connection.query(`${clientSQL}`, (clientErr, clientResult) => {
+            let callbackInsert = (clientErr, clientResult) => {
                 if (clientErr) {
                     return reject(clientErr);
                 }
 
                 connection.end();
 
-                return resolve({address: result, client: clientResult});
+                return resolve({ client: clientResult });
+            };
+
+            let clientQuery = 'INSERT INTO client(`name`,`email`, `password`,'+
+            ' `postalCode`, `addressNumber`, `cellPhone`, `height`, `hip`, `waist`,'+
+            ' `heelSize`, `size`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);';
+
+            let clientValues = [client.name, client.email, client.password, postalCode,
+                client.number, client.cellPhone, client.height, client.hip,
+                client.waist, client.heelSize, client.size];
+                let clientSQL = mysql.format(clientQuery, clientValues);
+
+            if (resultPostalCode.length) {
+                return connection.query(`${clientSQL}`, callbackInsert);
+            }
+
+            let addressQuery = 'INSERT INTO addresses(`postalCode`, `street`, `city`, `state`) VALUES(?, ?, ?, ?);';
+            let addressValues = [postalCode, client.address, client.city, client.state];
+            let addressSQL = mysql.format(addressQuery, addressValues);
+
+            connection.query(`${addressSQL}`, (err, result) => {
+                if (err) {
+                    return reject({statusCode: 503, message: err.code});
+                }
+
+                connection.query(`${clientSQL}`, callbackInsert);
             });
         });
     });

@@ -25,6 +25,7 @@ describe('Creating Client', function() {
         connection.query(`SET FOREIGN_KEY_CHECKS=0;
             TRUNCATE TABLE client;
             TRUNCATE TABLE addresses;
+            INSERT INTO addresses(\`postalCode\`, \`street\`, \`city\`, \`state\`) VALUES(\'09111620\', \'Rua Jales\', \'Santo André\', \'SP\');
             SET FOREIGN_KEY_CHECKS=1;`);
 
         connection.end();
@@ -126,6 +127,32 @@ describe('Creating Client', function() {
         });
     });
 
+    it('Expected sucess in a existign address', function(done) {
+        Client.create({
+            name: 'Keila',
+            email: 'Keila@dressandgo.com.br',
+            password: 'Senha123Forte',
+            address: 'Rua Jales',
+            number: '80',
+            city: 'Santo André',
+            state: "SP",
+            postalCode: "09111-620",
+            cellPhone: 1130454006,
+            height: 168,
+            hip: 78,
+            waist: 68,
+            heelSize: 10,
+            size: 40
+        }).then(function(result) {
+            expect(result).to.be.a('object');
+            expect(result).to.have.property('client');
+            expect(result.client).to.have.property('fieldCount');
+            expect(result.client).to.have.property('affectedRows');
+            expect(result.client.insertId).to.equal(1);
+            done();
+        });
+    });
+
     it('Expected a sucess with a client object', function(done) {
         Client.create({
             name: 'Keila',
@@ -144,15 +171,10 @@ describe('Creating Client', function() {
             size: 40
         }).then(function(result) {
             expect(result).to.be.a('object');
-            expect(result).to.have.property('address');
             expect(result).to.have.property('client');
             expect(result.client).to.have.property('fieldCount');
-            expect(result.address).to.have.property('fieldCount');
             expect(result.client).to.have.property('affectedRows');
-            expect(result.address).to.have.property('affectedRows');
             expect(result.client.affectedRows).to.equal(1);
-            expect(result.address.affectedRows).to.equal(1);
-
             done();
         });
     });
