@@ -22,7 +22,6 @@ let create = function(dress) {
                 return reject({statusCode: 503, message: dressErr.code});
             }
 
-
             return resolve(dressResult);
         });
     });

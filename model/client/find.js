@@ -11,7 +11,7 @@ let find = function(clientEmail) {
     let promise = new Promise((resolve, reject) => {
 
         if (typeof clientEmail !== 'string') {
-            return reject({ statusCode: 400, message: 'Need be Object to create a client' });
+            return reject({ statusCode: 400, message: 'Need be string to find a client' });
         }
 
         let sql = 'SELECT * FROM `client` INNER JOIN `addresses` ON client.postalCode=addresses.postalCode WHERE `email`=?;';
