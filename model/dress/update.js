@@ -2,7 +2,7 @@
 
 const mysql = require('mysql');
 
-let update = function(email, client) {
+let update = function(id, dressInfo) {
 
     let connection = mysql.createConnection(this.config);
 
@@ -10,34 +10,35 @@ let update = function(email, client) {
 
     let promise = new Promise((resolve, reject) => {
 
-        if (!email) {
-            return reject({ statusCode: 400, message: 'Need email to update a client' });
+        if (!id) {
+            return reject({ statusCode: 400, message: 'Need a id to update a dress' });
         }
 
-        if (!Object.keys(client).length) {
-            return reject({ statusCode: 400, message: 'Need a object to update a client' });
+        if (!Object.keys(dressInfo).length) {
+            return reject({ statusCode: 400, message: 'Need info to update a dress' });
         }
 
-        if (client.postalCode) {
-            return reject({ statusCode: 400, message: 'Postalcode can be update in this way' });
+        if (dressInfo.id) {
+            return reject({ statusCode: 400, message: 'Can\'t update id dress' });
         }
 
         let fields = '';
 
-        for (let key in client) {
+        for (let key in dressInfo) {
             fields += fields === '' ? '' : ', ';
-            fields += `${key}='${client[key]}'`;
+            fields += `${key}='${dressInfo[key]}'`;
         }
 
-        let sql = `UPDATE client SET ${fields} WHERE \`email\`=?;`;
-        let searchSQL = mysql.format(sql, email);
+        let sql = `UPDATE dress SET ${fields} WHERE \`id\`=?;`;
+        let updateSQL = mysql.format(sql, id);
 
-        connection.query(searchSQL, (err, result) => {
+        connection.query(updateSQL, (err, result) => {
             if (err) {
                 return reject(err);
             }
 
             connection.end();
+
             return resolve(result);
         });
     });
