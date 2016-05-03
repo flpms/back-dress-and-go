@@ -23,6 +23,15 @@ const find = function(req, res) {
     }
 
     Client.find(client).then(result => {
+
+        if (!result[0]) {
+            res.status(404).send({ statusCode: 404, message: 'message client don\'t exists.'});
+        }
+
+        if (result[0].deleted) {
+            res.status(404).send({ statusCode: 404, message: 'message client don\'t exists.'});
+        }
+
         res.status(200).send({ status: 'ok', client: result[0]});
     }).catch(fail);
 };

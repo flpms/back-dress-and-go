@@ -24,9 +24,11 @@ describe('Controller client test', function() {
         connection.connect();
 
         connection.query('SET FOREIGN_KEY_CHECKS=0; TRUNCATE TABLE client; TRUNCATE TABLE addresses;' +
-        'INSERT INTO client(`name`, `email`, `password`, `postalCode`, `addressNumber`, `cellPhone`, `height`, `hip`, `waist`, `heelSize`, `size`)' +
-        'VALUES(\'Keila\', \'keila@dressandgo.com.br\', \'Senha123Forte\', \'04545041\', \'352\', 1130454006, 168, 78, 68, 10, 40);' +
+        'INSERT INTO client(`name`, `email`, `password`, `postalCode`, `addressNumber`, `cellPhone`, `height`, `hip`, `waist`, `heelSize`, `size`, `deleted`)' +
+        'VALUES(\'Keila\', \'keila@dressandgo.com.br\', \'Senha123Forte\', \'04545041\', \'352\', 1130454006, 168, 78, 68, 10, 40, 0);' +
         'INSERT INTO addresses(`postalCode`, `street`, `city`, `state`) VALUES(\'04545041\', \'Rua Santa Justina\', \'São Paulo\', \'SP\');' +
+        'INSERT INTO client(`name`, `email`, `password`, `postalCode`, `addressNumber`, `cellPhone`, `height`, `hip`, `waist`, `heelSize`, `size`, `deleted`)' +
+        'VALUES(\'Keila\', \'filipe@gmail.com.br\', \'Senha123Forte\', \'04545041\', \'352\', 1130454006, 168, 78, 68, 10, 40, 1);' +
         'SET FOREIGN_KEY_CHECKS=1;');
 
         connection.end();
@@ -79,6 +81,48 @@ describe('Controller client test', function() {
         client.find({ params: { email: '' } }, res);
     });
 
+    it('Expected a failure when find client, cause client don\'t exists', function(done) {
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode
+                return this;
+            },
+            send: function(err) {
+
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(404);
+
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('message client don\'t exists.');
+
+                done();
+            }
+        };
+
+        client.find({ params: { email: 'filipesilva@gmail.com' } }, res);
+    });
+
+    it('Expected a failure when find client was deleted, cause client don\'t exists', function(done) {
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode
+                return this;
+            },
+            send: function(err) {
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(404);
+                expect(err).to.be.a('object');
+                expect(err).to.have.property('message');
+                expect(err.message).to.equal('message client don\'t exists.');
+
+                done();
+            }
+        };
+
+        client.find({ params: { email: 'filipe@gmail.com.br' } }, res);
+    });
+
     it('Expected sucess when find client, cause empty id', function(done) {
         var res = {
             status: function(statusCode) {
@@ -98,6 +142,6 @@ describe('Controller client test', function() {
             }
         };
 
-        client.find({ params: { email: 'filipemelodasilva@gmail.com' } }, res);
+        client.find({ params: { email: 'keila@dressandgo.com.br' } }, res);
     });
 });
