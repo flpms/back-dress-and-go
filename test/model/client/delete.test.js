@@ -22,8 +22,8 @@ describe('Find User', function() {
         connection.connect();
 
         connection.query('SET FOREIGN_KEY_CHECKS=0; TRUNCATE TABLE client; TRUNCATE TABLE addresses;' +
-        'INSERT INTO client(`name`, `email`, `password`, `postalCode`, `addressNumber`, `cellPhone`, `height`, `hip`, `waist`, `heelSize`, `size`)' +
-        'VALUES(\'Keila\', \'keila@dressandgo.com.br\', \'Senha123Forte\', \'04545041\', \'352\', 1130454006, 168, 78, 68, 10, 40);' +
+        'INSERT INTO client(`name`, `email`, `password`, `postalCode`, `addressNumber`, `cellPhone`, `height`, `hip`, `waist`, `heelSize`, `size`, `deleted`)' +
+        'VALUES(\'Keila\', \'keila@dressandgo.com.br\', \'Senha123Forte\', \'04545041\', \'352\', 1130454006, 168, 78, 68, 10, 40, 0);' +
         'INSERT INTO addresses(`postalCode`, `street`, `city`, `state`) VALUES(\'04545041\', \'Rua Santa Justina\', \'São Paulo\', \'SP\');' +
         'SET FOREIGN_KEY_CHECKS=1;');
 
@@ -43,21 +43,12 @@ describe('Find User', function() {
     });
 
     it('Expected a failure when client email is not informed', function(done) {
-
-        Client.del('keila@dressandgo.com.br').catch(function(err) {
-            console.log('= = ', err);
-        }).then(function(result) {
-console.log('49 - - - - \n', result);
-            expect(result).to.be.a('array');
-            // expect(result[0]).to.have.property('id');
-            // expect(result[0]).to.have.property('email');
-            // expect(result[0]).to.have.property('password');
-            // expect(result[0]).to.have.property('postalCode');
-            // expect(result[0]).to.have.property('street');
-            //
-            // expect(result[0].street).to.equal('Rua Santa Justina');
-            // expect(result[0].postalCode).to.equal('04545041');
-
+        Client.del('keila@dressandgo.com.br').then(function(result) {
+            expect(result).to.be.a('object');
+            expect(result).to.have.property('changedRows');
+            expect(result).to.have.property('affectedRows');
+            expect(result.changedRows).to.equal(1);
+            expect(result.affectedRows).to.equal(1);
             done();
         });
     });

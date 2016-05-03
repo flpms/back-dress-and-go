@@ -8,7 +8,7 @@ const del = function(req, res) {
         if (err.statusCode) {
             res.status(err.statusCode).send({message: err.message});
         } else {
-            res.status(503).send({});
+            res.status(503).send({message: err});
         }
     };
 
@@ -22,8 +22,10 @@ const del = function(req, res) {
         return fail({ statusCode: 400, message: '{"email": "string"} is required field' });
     }
 
-    Client.del(client).then(result => {
-        res.status(200).send({ status: 'ok', client: result});
+    Client.del(client).then(result => { console.log(' - - ', result);
+        if (result.changedRows === 1) {
+            res.status(200).send({ status: 'ok', message: `${client} deleted with sucess.`});
+        }
     }).catch(fail);
 };
 

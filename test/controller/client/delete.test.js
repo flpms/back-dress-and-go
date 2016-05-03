@@ -24,19 +24,19 @@ describe('Controller client test', function() {
         connection.connect();
 
         connection.query('SET FOREIGN_KEY_CHECKS=0; TRUNCATE TABLE client; TRUNCATE TABLE addresses;' +
-        'INSERT INTO client(`name`, `email`, `password`, `postalCode`, `addressNumber`, `cellPhone`, `height`, `hip`, `waist`, `heelSize`, `size`)' +
-        'VALUES(\'Keila\', \'keila@dressandgo.com.br\', \'Senha123Forte\', \'04545041\', \'352\', 1130454006, 168, 78, 68, 10, 40);' +
+        'INSERT INTO client(`name`, `email`, `password`, `postalCode`, `addressNumber`, `cellPhone`, `height`, `hip`, `waist`, `heelSize`, `size`, `deleted`)' +
+        'VALUES(\'Keila\', \'keila@dressandgo.com.br\', \'Senha123Forte\', \'04545041\', \'352\', 1130454006, 168, 78, 68, 10, 40, 0);' +
         'INSERT INTO addresses(`postalCode`, `street`, `city`, `state`) VALUES(\'04545041\', \'Rua Santa Justina\', \'São Paulo\', \'SP\');' +
         'SET FOREIGN_KEY_CHECKS=1;');
 
         connection.end();
     });
 
-    it('Expected sucess cause client find is a function', function() {
-        expect(client.find).to.be.a('function');
+    it('Expected sucess cause client delete is a function', function() {
+        expect(client.del).to.be.a('function');
     });
 
-    it('Expected a failure when find client, cause empty id', function(done) {
+    it('Expected a failure when del calll cause empty id', function(done) {
         var res = {
             status: function(statusCode) {
                 this.statusCode = statusCode
@@ -56,7 +56,7 @@ describe('Controller client test', function() {
         client.del({params: ''}, res);
     });
 
-    it('Expected a failure when find client, cause empty email', function(done) {
+    it('Expected a failure when delete client, cause empty email', function(done) {
         var res = {
             status: function(statusCode) {
                 this.statusCode = statusCode
@@ -76,13 +76,14 @@ describe('Controller client test', function() {
         client.del({ params: { email: '' } }, res);
     });
 
-    it('Expected sucess when find client, cause empty id', function(done) {
+    it('Expected sucess when delete client, cause empty id', function(done) {
         var res = {
             status: function(statusCode) {
                 this.statusCode = statusCode
                 return this;
             },
             send: function(result) {
+
                 expect(this.statusCode).to.be.a('number');
                 expect(this.statusCode).to.equal(200);
                 expect(result).to.be.a('object');
@@ -93,6 +94,6 @@ describe('Controller client test', function() {
             }
         };
 
-        client.del({ params: { email: 'filipemelodasilva@gmail.com' } }, res);
+        client.del({ params: { email: 'filipe@gmail.com' } }, res);
     });
 });
