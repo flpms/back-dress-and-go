@@ -5,6 +5,7 @@ const mysql = require('mysql');
 let del = function(clientEmail) {
 
     let connection = mysql.createConnection(this.config);
+
     connection.connect();
 
     let promise = new Promise((resolve, reject) => {

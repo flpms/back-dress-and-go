@@ -49,14 +49,15 @@ let create = function(client) {
                 return resolve({ client: clientResult });
             };
 
-            let clientQuery = 'INSERT INTO client(`name`,`email`, `password`,'+
-            ' `postalCode`, `addressNumber`, `cellPhone`, `height`, `hip`, `waist`,'+
+            let clientQuery = 'INSERT INTO client(`name`,`email`, `password`,' +
+            ' `postalCode`, `addressNumber`, `cellPhone`, `height`, `hip`, `waist`,' +
             ' `heelSize`, `size`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);';
 
             let clientValues = [client.name, client.email, client.password, postalCode,
                 client.number, client.cellPhone, client.height, client.hip,
                 client.waist, client.heelSize, client.size];
-                let clientSQL = mysql.format(clientQuery, clientValues);
+
+            let clientSQL = mysql.format(clientQuery, clientValues);
 
             if (resultPostalCode.length) {
                 return connection.query(`${clientSQL}`, callbackInsert);
@@ -66,8 +67,8 @@ let create = function(client) {
             let addressValues = [postalCode, client.address, client.city, client.state];
             let addressSQL = mysql.format(addressQuery, addressValues);
 
-            connection.query(`${addressSQL}`, (err, result) => {
-                if (err) {
+            connection.query(`${addressSQL}`, addressErr => {
+                if (addressErr) {
                     return reject({statusCode: 503, message: err.code});
                 }
 

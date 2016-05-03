@@ -22,7 +22,8 @@ const del = function(req, res) {
         return fail({ statusCode: 400, message: '{"email": "string"} is required field' });
     }
 
-    Client.del(client).then(result => { console.log(' - - ', result);
+    Client.del(client).then(result => {
+
         if (result.changedRows === 1) {
             res.status(200).send({ status: 'ok', message: `${client} deleted with sucess.`});
         }
