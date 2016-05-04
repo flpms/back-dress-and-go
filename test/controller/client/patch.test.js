@@ -7,7 +7,7 @@ const mysql = require('mysql');
 const client = require('../../../controller/client/');
 const expect = chai.expect;
 
-describe('Controller client test', function() {
+describe('Controller patch client test', function() {
 
     let connection;
 
@@ -30,7 +30,7 @@ describe('Controller client test', function() {
             TRUNCATE TABLE addresses;
             TRUNCATE TABLE rents;
             TRUNCATE TABLE dress;
-            INSERT INTO client(\`name`, \`email\`, \`password`, \`postalCode`, `\addressNumber\`, \`cellPhone\`, \`height\`, \`hip\`, \`waist\`, \`heelSize\`, \`size\`, \`clientDeleted\`)
+            INSERT INTO client(\`name\`, \`email\`, \`password\`, \`postalCode`, `\addressNumber\`, \`cellPhone\`, \`height\`, \`hip\`, \`waist\`, \`heelSize\`, \`size\`, \`clientDeleted\`)
             VALUES(\'Keila\', \'keila@dressandgo.com.br\', \'Senha123Forte\', \'04545041\', \'352\', 1130454006, 168, 78, 68, 10, 40, 0);
             INSERT INTO addresses(\`postalCode\`, \`street\`, \`city\`, \`state\`) VALUES(\'04545041\', \'Rua Santa Justina\', \'São Paulo\', \'SP\');
             SET FOREIGN_KEY_CHECKS=1;`);

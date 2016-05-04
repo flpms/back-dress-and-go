@@ -7,7 +7,7 @@ const mysql = require('mysql');
 const client = require('../../../controller/client/');
 const expect = chai.expect;
 
-describe('Controller client test', function() {
+describe('Controller post client test', function() {
 
     let connection;
 
