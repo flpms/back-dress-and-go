@@ -30,11 +30,13 @@ describe('Controller client test', function() {
             TRUNCATE TABLE addresses;
             TRUNCATE TABLE rents;
             TRUNCATE TABLE dress;
+            INSERT INTO client(\`name`, \`email\`, \`password`, \`postalCode`, `\addressNumber\`, \`cellPhone\`, \`height\`, \`hip\`, \`waist\`, \`heelSize\`, \`size\`, \`deleted\`)
+            VALUES(\'Keila\', \'keila@dressandgo.com.br\', \'Senha123Forte\', \'04545041\', \'352\', 1130454006, 168, 78, 68, 10, 40, 0);
+            INSERT INTO addresses(\`postalCode\`, \`street\`, \`city\`, \`state\`) VALUES(\'04545041\', \'Rua Santa Justina\', \'São Paulo\', \'SP\');
             SET FOREIGN_KEY_CHECKS=1;`);
 
         connection.end();
     });
-
 
     it('Expected sucess cause client is a function', function() {
         expect(client.update).to.be.a('function');
@@ -68,8 +70,6 @@ describe('Controller client test', function() {
                 return this;
             },
             send: function(result) {
-                console.log('71 - - -', result);
-
                 expect(this.statusCode).to.be.a('number');
                 expect(this.statusCode).to.equal(200);
 
@@ -100,7 +100,7 @@ describe('Controller client test', function() {
                 return this;
             },
             send: function(result) {
-                console.log(' - - -- 101', result);
+
                 expect(this.statusCode).to.be.a('number');
                 expect(this.statusCode).to.equal(200);
 
