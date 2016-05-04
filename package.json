@@ -4,7 +4,7 @@
   "description": "Backend test for dress and go",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint controller/client/ controller/dress/ model/client/ model/dress/ *.js",
+    "lint": "eslint controller/client/ controller/dress/ controller/rent/ model/client/ model/dress/ model/client/rent/ *.js",
     "pretest": "npm run lint",
     "test": "mocha --recursive"
   },
@@ -21,6 +21,7 @@
   "dependencies": {
     "body-parser": "^1.15.0",
     "express": "^4.13.4",
+    "moment": "^2.13.0",
     "morgan": "^1.7.0",
     "mysql": "^2.10.2"
   },
