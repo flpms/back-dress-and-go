@@ -24,7 +24,7 @@ describe('Controller client test', function() {
         connection.connect();
 
         connection.query('SET FOREIGN_KEY_CHECKS=0; TRUNCATE TABLE dress;' +
-        'INSERT INTO dress(\`id\` ,\`model\`, \`stylist\`, \`color\`, \`height\`, \`size\`) VALUES(1, \'Sereia\', \'Marcelo Quadros\', \'verde\', 142, 34);' +
+        'INSERT INTO dress(\`id\` ,\`model\`, \`stylist\`, \`color\`, \`height\`, \`size\`) VALUES(1, \'Sereia\', \'Marcelo Quadros\', \'verde\', 142, 34, \'dressDeleted\');' +
         'INSERT INTO dress(\`id\` ,\`model\`, \`stylist\`, \`color\`, \`height\`, \`size\`, \`deleted\`) VALUES(3, \'Sereia\', \'Marcelo Quadros\', \'rosa\', 142, 34, 1);' +
         'SET FOREIGN_KEY_CHECKS=1;');
 

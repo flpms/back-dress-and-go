@@ -14,7 +14,7 @@ let del = function(dressId) {
             return reject({ statusCode: 400, message: 'Need have id to delete' });
         }
 
-        let sql = 'UPDATE dress SET `deleted`=1 WHERE `id`=?;';
+        let sql = 'UPDATE dress SET `dressDeleted`=1 WHERE `id`=?;';
 
         connection.query(sql, dressId, (err, rows) => {
             if (err) {
