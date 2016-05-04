@@ -28,7 +28,7 @@ const find = function(req, res) {
             res.status(404).send({ statusCode: 404, message: 'message client don\'t exists.'});
         }
 
-        if (result[0].deleted) {
+        if (result[0].dressDeleted) {
             res.status(404).send({ statusCode: 404, message: 'message client don\'t exists.'});
         }
 
