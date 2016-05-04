@@ -22,7 +22,7 @@ describe('Dress update', function() {
         connection.connect();
 
         connection.query('SET FOREIGN_KEY_CHECKS=0; TRUNCATE TABLE dress;' +
-        'INSERT INTO dress(\`id\` ,\`model\`, \`stylist\`, \`color\`, \`height\`, \`size\`) VALUES(1, \'Sereia\', \'Marcelo Quadros\', \'verde\', 142, 34);' +
+        'INSERT INTO dress(\`id\` ,\`model\`, \`stylist\`, \`color\`, \`height\`, \`size\`, \`dressDeleted\`) VALUES(1, \'Sereia\', \'Marcelo Quadros\', \'verde\', 142, 34, 0);' +
         'SET FOREIGN_KEY_CHECKS=1;');
 
         connection.end();

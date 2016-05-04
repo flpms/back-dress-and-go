@@ -6,7 +6,7 @@ const mysql = require('mysql');
 const Client = require('../../../model/client');
 const expect = chai.expect;
 
-describe('Find User', function() {
+describe('Find Client', function() {
 
     before(function() {
         global.environment = 'test';

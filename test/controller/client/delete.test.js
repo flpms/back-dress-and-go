@@ -76,7 +76,7 @@ describe('Controller delete client test', function() {
         client.del({ params: { email: '' } }, res);
     });
 
-    it('Expected sucess when delete client, cause empty id', function(done) {
+    it('Expected sucess when delete client', function(done) {
         var res = {
             status: function(statusCode) {
                 this.statusCode = statusCode

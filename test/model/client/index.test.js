@@ -5,7 +5,7 @@ const assert = require('assert');
 const client = require('../../../model/client');
 const expect = chai.expect;
 
-describe('Test client index', function() {
+describe('Test model client index', function() {
     it ('Expect sucess if client is a object', function() {
         expect(client).to.be.a('object');
     });

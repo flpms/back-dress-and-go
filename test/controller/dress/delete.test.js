@@ -6,7 +6,7 @@ const mysql = require('mysql');
 const Dress = require('../../../controller/dress/');
 const expect = chai.expect;
 
-describe('Controller client test', function() {
+describe('Controller dress delete test', function() {
 
     let connection;
 
@@ -81,7 +81,7 @@ describe('Controller client test', function() {
                 return this;
             },
             send: function(result) {
-console.log('- - - ', result);
+
                 expect(this.statusCode).to.be.a('number');
                 expect(this.statusCode).to.equal(200);
                 expect(result).to.be.a('object');

@@ -6,7 +6,7 @@ const mysql = require('mysql');
 const Dress = require('../../../controller/dress/');
 const expect = chai.expect;
 
-describe('Controller client test', function() {
+describe('Controller get dress test', function() {
 
     let connection;
 
