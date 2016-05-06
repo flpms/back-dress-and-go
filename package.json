@@ -6,7 +6,9 @@
   "scripts": {
     "lint": "eslint controller/client/ controller/dress/ controller/rent/ model/client/ model/dress/ model/client/rent/ *.js",
     "pretest": "npm run lint",
-    "test": "mocha --recursive"
+    "test": "mocha --recursive",
+    "start:dev": "node index 3001 dev",
+    "start:prod": "node index 3001 prod"
   },
   "repository": {
     "type": "git",
