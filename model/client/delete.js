@@ -2,7 +2,7 @@
 
 const mysql = require('mysql');
 
-let del = function(clientEmail) {
+let del = function(id, clientEmail) {
 
     let connection = mysql.createConnection(this.config);
 
@@ -14,9 +14,10 @@ let del = function(clientEmail) {
             return reject({ statusCode: 400, message: 'Need be email to delete a client' });
         }
 
-        let sql = 'UPDATE client SET `clientDeleted`=1 WHERE `email`=?;';
+        let sql = 'UPDATE client SET `clientDeleted`=1 WHERE `email`=? AND id=?;';
+        let query = mysql.format(sql, [clientEmail, id]);
 
-        connection.query(sql, clientEmail, (err, rows) => {
+        connection.query(query, (err, rows) => {
             if (err) {
                 return reject(err);
             }
