@@ -41,6 +41,15 @@ describe('Find dress', function() {
         });
     });
 
+    it('Expected a sucess when search for all dresses', function(done) {
+
+        Dress.find('findall').then(function(result) { console.log(' - -', result);
+            expect(result).to.be.a('array');
+
+            done();
+        });
+    });
+
     it('Expected a sucess when search for a dress with id', function(done) {
 
         Dress.find(1).then(function(result) {

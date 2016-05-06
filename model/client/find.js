@@ -14,10 +14,17 @@ let find = function(clientEmail) {
             return reject({ statusCode: 400, message: 'Need be string to find a client' });
         }
 
-        let sql = 'SELECT * FROM `client` INNER JOIN `addresses` ON client.postalCode=addresses.postalCode WHERE `email`=?;';
-        let searchSQL = mysql.format(sql, clientEmail);
+        let searchSQL = '';
 
-        connection.query(searchSQL, (err, result) => {
+        if (clientEmail === 'findall') {
+            searchSQL = 'SELECT * FROM `client` INNER JOIN `addresses` ON client.postalCode=addresses.postalCode LIMIT 50;'
+        } else {
+            let sql = 'SELECT * FROM `client` INNER JOIN `addresses` ON client.postalCode=addresses.postalCode WHERE `email`=?;';
+
+            searchSQL = mysql.format(sql, clientEmail);
+        }
+
+        connection.query(`${searchSQL}`, (err, result) => {
             if (err) {
                 return reject(err);
             }

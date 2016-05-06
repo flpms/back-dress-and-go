@@ -38,27 +38,6 @@ describe('Controller get client test', function() {
         expect(client.find).to.be.a('function');
     });
 
-    it('Expected a failure when find client, cause empty id', function(done) {
-        var res = {
-            status: function(statusCode) {
-                this.statusCode = statusCode
-                return this;
-            },
-            send: function(err) {
-                expect(this.statusCode).to.be.a('number');
-                expect(this.statusCode).to.equal(400);
-
-                expect(err).to.be.a('object');
-                expect(err).to.have.property('message');
-                expect(err.message).to.equal('Client e-mail not informed');
-
-                done();
-            }
-        };
-
-        client.find({params: ''}, res);
-    });
-
     it('Expected a failure when find client, cause empty email', function(done) {
         var res = {
             status: function(statusCode) {
@@ -143,5 +122,27 @@ describe('Controller get client test', function() {
         };
 
         client.find({ params: { email: 'keila@dressandgo.com.br' } }, res);
+    });
+
+    it('Expected sucess when find client, cause empty id', function(done) {
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode
+                return this;
+            },
+            send: function(result) {
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(200);
+
+                expect(result).to.be.a('object');
+                expect(result).to.have.property('status');
+                expect(result.status).to.equal('ok');
+                expect(result.clients).to.equal('ok');
+
+                done();
+            }
+        };
+
+        client.find({params: ''}, res);
     });
 });

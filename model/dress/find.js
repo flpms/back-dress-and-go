@@ -10,12 +10,19 @@ let find = function(dress) {
 
     let promise = new Promise((resolve, reject) => {
 
+        let sql = '';
+        let searchSQL = '';
+
         if (!dress) {
             return reject({ statusCode: 400, message: 'Need id to search' });
         }
 
-        let sql = 'SELECT * FROM `dress` WHERE id=?;';
-        let searchSQL = mysql.format(sql, dress);
+        if (dress === 'findall') {
+            searchSQL = 'SELECT * FROM `dress` LIMIT 100';
+        } else {
+            sql = 'SELECT * FROM `dress` WHERE id=?;';
+            searchSQL = mysql.format(sql, dress);
+        }
 
         connection.query(searchSQL, (err, result) => {
             if (err) {

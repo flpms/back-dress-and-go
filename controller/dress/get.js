@@ -12,8 +12,22 @@ const find = function(req, res) {
         }
     };
 
-    if (!req.params || !Object.keys(req.params).length) {
-        return fail({ statusCode: 400, message: 'Id dress not informed' });
+    if (req.params && !Object.keys(req.params).length) {
+        return Dress.find('findall').then(result => {
+
+            if (!result) {
+                res.status(404).send({ statusCode: 404, message: 'message dress don\'t exists.'});
+            }
+
+            let filterResult = result.filter((item) => {
+                if (item.dressDeleted !== 1) {
+                    delete item.dressDeleted;
+                    return item;
+                }
+            });
+
+            res.status(200).send({ status: 'ok', dress: filterResult});
+        }).catch(fail);
     }
 
     let dress = Number(req.params.id);
@@ -30,9 +44,11 @@ const find = function(req, res) {
 
         if (result[0].dressDeleted) {
             res.status(404).send({ statusCode: 404, message: 'message dress don\'t exists.'});
+        } else {
+            delete result[0].dressDeleted;
         }
 
-        res.status(200).send({ status: 'ok', client: result[0]});
+        res.status(200).send({ status: 'ok', dress: result[0]});
     }).catch(fail);
 };
 

@@ -13,7 +13,17 @@ const find = function(req, res) {
     };
 
     if (!req.params || !Object.keys(req.params).length) {
-        return fail({ statusCode: 400, message: 'Client e-mail not informed' });
+        return Client.find('findall').then(result => {
+
+            let filterResults = result.filter(client => {
+                if (client.clientDeleted !== 1) {
+                    delete client.clientDeleted;
+                    return client;
+                }
+            });
+
+            res.status(200).send({status: 'ok', clients: filterResults });
+        }).catch(fail);
     }
 
     let client = req.params.email;
@@ -28,8 +38,10 @@ const find = function(req, res) {
             res.status(404).send({ statusCode: 404, message: 'message client don\'t exists.'});
         }
 
-        if (result[0].dressDeleted) {
+        if (result[0].clientDeleted) {
             res.status(404).send({ statusCode: 404, message: 'message client don\'t exists.'});
+        } else {
+            delete result[0].clientDeleted;
         }
 
         res.status(200).send({ status: 'ok', client: result[0]});

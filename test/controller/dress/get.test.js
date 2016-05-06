@@ -24,8 +24,8 @@ describe('Controller get dress test', function() {
         connection.connect();
 
         connection.query('SET FOREIGN_KEY_CHECKS=0; TRUNCATE TABLE dress;' +
-        'INSERT INTO dress(\`id\` ,\`model\`, \`stylist\`, \`color\`, \`height\`, \`size\`) VALUES(1, \'Sereia\', \'Marcelo Quadros\', \'verde\', 142, 34, \'dressDeleted\');' +
-        'INSERT INTO dress(\`id\` ,\`model\`, \`stylist\`, \`color\`, \`height\`, \`size\`, \`deleted\`) VALUES(3, \'Sereia\', \'Marcelo Quadros\', \'rosa\', 142, 34, 1);' +
+        'INSERT INTO dress(\`id\` ,\`model\`, \`stylist\`, \`color\`, \`height\`, \`size\`, \`dressDeleted\`) VALUES(1, \'Sereia\', \'Marcelo Quadros\', \'verde\', 142, 34, 0);' +
+        'INSERT INTO dress(\`id\` ,\`model\`, \`stylist\`, \`color\`, \`height\`, \`size\`, \`dressDeleted\`) VALUES(3, \'Sereia\', \'Marcelo Quadros\', \'rosa\', 142, 34, 1);' +
         'SET FOREIGN_KEY_CHECKS=1;');
 
         connection.end();
@@ -33,27 +33,6 @@ describe('Controller get dress test', function() {
 
     it('Expected sucess cause client find is a function', function() {
         expect(Dress.find).to.be.a('function');
-    });
-
-    it('Expected a failure when find a dress, cause empty params', function(done) {
-        var res = {
-            status: function(statusCode) {
-                this.statusCode = statusCode
-                return this;
-            },
-            send: function(err) {
-                expect(this.statusCode).to.be.a('number');
-                expect(this.statusCode).to.equal(400);
-
-                expect(err).to.be.a('object');
-                expect(err).to.have.property('message');
-                expect(err.message).to.equal('Id dress not informed');
-
-                done();
-            }
-        };
-
-        Dress.find({params: ''}, res);
     });
 
     it('Expected a failure when find a dress, cause empty id', function(done) {
@@ -77,7 +56,7 @@ describe('Controller get dress test', function() {
         Dress.find({ params: { id: '' }}, res);
     });
 
-    it('Expected a failure when find a dress, cause empty id is a wrong type', function(done) {
+    it('Expected a failure when find a dress, cause id is a wrong type', function(done) {
         var res = {
             status: function(statusCode) {
                 this.statusCode = statusCode
@@ -140,7 +119,7 @@ describe('Controller get dress test', function() {
         Dress.find({ params: { id: 3 } }, res);
     });
 
-    it('Expected sucess when find client', function(done) {
+    it('Expected sucess when find a dress', function(done) {
         var res = {
             status: function(statusCode) {
                 this.statusCode = statusCode
@@ -160,5 +139,27 @@ describe('Controller get dress test', function() {
         };
 
         Dress.find({ params: { id: 1} }, res);
+    });
+
+    it('Expected sucess when find all dresses', function(done) {
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode
+                return this;
+            },
+            send: function(result) {
+
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(200);
+
+                expect(result).to.be.a('object');
+                expect(result).to.have.property('status');
+                expect(result.status).to.equal('ok');
+
+                done();
+            }
+        };
+
+        Dress.find({ params: ''}, res);
     });
 });
