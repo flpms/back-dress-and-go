@@ -50,11 +50,11 @@ let create = function(client) {
             };
 
             let clientQuery = 'INSERT INTO client(`name`,`email`, `password`,' +
-            ' `postalCode`, `addressNumber`, `cellPhone`, `height`, `hip`, `waist`,' +
-            ' `heelSize`, `size`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);';
+            ' `postalCode`, `addressNumber`, `cellPhone`, `height`, `bust`, `hip`, `waist`,' +
+            ' `heelSize`, `size`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);';
 
             let clientValues = [client.name, client.email, client.password, postalCode,
-                client.number, client.cellPhone, client.height, client.hip,
+                client.number, client.cellPhone, client.height, client.bust, client.hip,
                 client.waist, client.heelSize, client.size];
 
             let clientSQL = mysql.format(clientQuery, clientValues);
