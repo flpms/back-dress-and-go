@@ -6,6 +6,9 @@ let Client = require('../controller/client/');
 let Dress = require('../controller/dress/');
 let Rent = require('../controller/rent/');
 
+router.get('/clients', Client.find);
+router.get('/dresses', Dress.find);
+
 router.post('/client/',  Client.create);
 router.get('/client/:email',  Client.find);
 router.patch('/client/:email',  Client.update);
