@@ -17,15 +17,17 @@ const del = function(req, res) {
     }
 
     let client = req.params.email;
+    let id = req.query.id;
 
     if (!client || typeof client !== 'string') {
         return fail({ statusCode: 400, message: '{"email": "string"} is required field' });
     }
 
-    Client.del(client).then(result => {
-
+    Client.del(id, client).then(result => {
         if (result.changedRows === 1) {
             res.status(200).send({ status: 'ok', message: `${client} deleted with sucess.`});
+        } else {
+            res.status(503).send({ status: 'ok', message: `Maybe client was deleted before.`});
         }
     }).catch(fail);
 };
