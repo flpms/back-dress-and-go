@@ -16,7 +16,7 @@ module.exports = {
     update(email, client) {
         return update.call({context: this, config: config.db[global.environment]}, email, client);
     },
-    del(client) {
-        return del.call({context: this, config: config.db[global.environment]}, client);
+    del(id, client) {
+        return del.call({context: this, config: config.db[global.environment]}, id, client);
     }
 }
