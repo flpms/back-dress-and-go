@@ -12,8 +12,22 @@ const find = function(req, res) {
         }
     };
 
-    if (!req.params || !Object.keys(req.params).length) {
-        return fail({ statusCode: 400, message: 'Id rent not informed' });
+    if (!req.params) {
+        return Rent.find('findall').then(result => {
+
+            if (!result) {
+                return res.status(404).send({ statusCode: 404, message: 'message rent don\'t exists.'});
+            }
+
+            let filterResult = result.filter((item) => {
+                if (item.rentDeleted !== 1) {
+                    delete item.rentDeleted;
+                    return item;
+                }
+            });
+
+            res.status(200).send({ status: 'ok', rent: filterResult});
+        }).catch(fail);
     }
 
     let rent = Number(req.params.id);

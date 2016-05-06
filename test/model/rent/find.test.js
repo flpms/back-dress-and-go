@@ -1,5 +1,3 @@
-//
-
 'use strict';
 
 const chai = require('chai');
@@ -53,6 +51,15 @@ describe('Find dress', function() {
     it('Expected a sucess when search for a rent with id', function(done) {
 
         Rent.find(1).then(function(result) {
+
+            expect(result).to.be.a('array');
+            done();
+        });
+    });
+
+    it('Expected a sucess when search for all rents with id', function(done) {
+
+        Rent.find('findall').then(function(result) {
 
             expect(result).to.be.a('array');
             done();

@@ -14,11 +14,18 @@ let find = function(rentId) {
             return reject({ statusCode: 400, message: 'Need id to search' });
         }
 
-        let sql = 'SELECT * FROM rents INNER JOIN `dress` ON rents.dressId=dress.id ' +
-                'INNER JOIN `client` ON rents.clientId=client.id INNER JOIN `addresses` ON client.postalCode=addresses.postalCode ' +
-                'WHERE rents.id=?;';
+        let sql = '';
+        let searchSQL = '';
 
-        let searchSQL = mysql.format(sql, rentId);
+        if (rentId === 'findall') {
+            searchSQL = 'SELECT * FROM rents INNER JOIN `dress` ON rents.dressId=dress.id ' +
+            'INNER JOIN `client` ON rents.clientId=client.id INNER JOIN `addresses` ON client.postalCode=addresses.postalCode LIMIT 100;'
+        } else {
+            sql = 'SELECT * FROM rents INNER JOIN `dress` ON rents.dressId=dress.id ' +
+            'INNER JOIN `client` ON rents.clientId=client.id INNER JOIN `addresses` ON client.postalCode=addresses.postalCode ' +
+            'WHERE rents.id=?;';
+            searchSQL = mysql.format(sql, rentId);
+        }
 
         connection.query(searchSQL, (err, result) => {
             if (err) {

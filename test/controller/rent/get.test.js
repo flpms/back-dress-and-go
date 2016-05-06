@@ -36,27 +36,6 @@ describe('Controller get rent test', function() {
         expect(Rent.find).to.be.a('function');
     });
 
-    it('Expected a failure when find a rent, cause empty params', function(done) {
-        var res = {
-            status: function(statusCode) {
-                this.statusCode = statusCode
-                return this;
-            },
-            send: function(err) {
-                expect(this.statusCode).to.be.a('number');
-                expect(this.statusCode).to.equal(400);
-
-                expect(err).to.be.a('object');
-                expect(err).to.have.property('message');
-                expect(err.message).to.equal('Id rent not informed');
-
-                done();
-            }
-        };
-
-        Rent.find({params: ''}, res);
-    });
-
     it('Expected a failure when find a rent, cause empty id', function(done) {
         var res = {
             status: function(statusCode) {
@@ -132,7 +111,7 @@ describe('Controller get rent test', function() {
                 expect(this.statusCode).to.equal(404);
                 expect(err).to.be.a('object');
                 expect(err).to.have.property('message');
-                expect(err.message).to.equal('message dress don\'t exists.');
+                expect(err.message).to.equal('message rent don\'t exists.');
 
                 done();
             }
@@ -161,5 +140,27 @@ describe('Controller get rent test', function() {
         };
 
         Rent.find({ params: { id: 1} }, res);
+    });
+
+    it('Expected sucess when find all rent', function(done) {
+        var res = {
+            status: function(statusCode) {
+                this.statusCode = statusCode
+                return this;
+            },
+            send: function(result) {
+
+                expect(this.statusCode).to.be.a('number');
+                expect(this.statusCode).to.equal(200);
+
+                expect(result).to.be.a('object');
+                expect(result).to.have.property('status');
+                expect(result.status).to.equal('ok');
+
+                done();
+            }
+        };
+
+        Rent.find({ param: '' }, res);
     });
 });
