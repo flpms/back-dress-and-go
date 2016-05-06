@@ -31,24 +31,24 @@ const update = function(req, res) {
         return fail({ statusCode: 400, message: '{"password": "string"} should be a string' });
     }
 
-    if (client.address && typeof client.address !== 'string') {
-        return fail({ statusCode: 400, message: '{"address": "string"} should be a string' });
+    if (client.address) {
+        return fail({ statusCode: 400, message: 'Can\'t update address' });
     }
 
-    if (client.number && typeof client.number !== 'number') {
-        return fail({ statusCode: 400, message: '{"number": number} should be a number' });
+    if (client.addressNumber && typeof client.addressNumber !== 'number') {
+        return fail({ statusCode: 400, message: '{"addressNumber": number} should be a number' });
     }
 
-    if (client.city && typeof client.city !== 'string') {
-        return fail({ statusCode: 400, message: '{"city": "string"} should be a string' });
+    if (client.city) {
+        return fail({ statusCode: 400, message: 'Can\'t update address' });
     }
 
-    if (client.state && typeof client.state !== 'string') {
-        return fail({ statusCode: 400, message: '{"state": "string"} should be a string' });
+    if (client.state) {
+        return fail({ statusCode: 400, message: 'Can\'t update address ' });
     }
 
-    if (client.postalCode && typeof client.postalCode !== 'string') {
-        return fail({ statusCode: 400, message: '{"postalCode": "string"} should be a string' });
+    if (client.postalCode) {
+        return fail({ statusCode: 400, message: 'Can\'t update address' });
     }
 
     if (client.cellPhone && typeof client.cellPhone !== 'number') {
