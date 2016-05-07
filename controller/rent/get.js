@@ -12,7 +12,7 @@ const find = function(req, res) {
         }
     };
 
-    if (!req.params) {
+    if (req.params && !req.params.id) {
         return Rent.find('findall').then(result => {
 
             if (!result) {

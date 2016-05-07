@@ -13,13 +13,6 @@ let create = function(client) {
             return reject({statusCode: 400, message: 'Need be Object to create a client'});
         }
 
-        if (!isNaN(client.postalCode) || client.postalCode.length < 8) {
-            return reject({
-                statusCode: 400,
-                message: 'A string is required to postalCode, the string format need be similar to this 00000-000'
-            });
-        }
-
         if (!client.email) {
             return reject({
                 statusCode: 400,

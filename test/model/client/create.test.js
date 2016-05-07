@@ -44,61 +44,6 @@ describe('Creating Client', function() {
         });
     });
 
-    it('Expected a failure when client postalCode is a number', function(done) {
-        Client.create({
-            name: 'Keila',
-            email: 'keila@dressandgo.com.br',
-            password: 'Senha123Forte',
-            address: 'Rua Santa Justina',
-            number: '352',
-            city: 'São Paulo',
-            state: "SP",
-            postalCode: 4545041,
-            cellPhone: 1130454006,
-            height: 168,
-            hip: 78,
-            waist: 68,
-            heelSize: 10,
-            size: 40
-        }).catch(function(err) {
-            expect(err).to.have.property('statusCode');
-            expect(err.statusCode).to.equal(400);
-
-            expect(err).to.be.a('object');
-            expect(err).to.have.property('message');
-            expect(err.message).to.equal('A string is required to postalCode, the string format need be similar to this 00000-000');
-
-            done();
-        });
-    });
-
-    it('Expected a failure when client postalCode is not a formated postal code', function(done) {
-        Client.create({
-            name: 'Keila',
-            email: 'keila@dressandgo.com.br',
-            password: 'Senha123Forte',
-            address: 'Rua Santa Justina',
-            number: '352',
-            city: 'São Paulo',
-            state: "SP",
-            postalCode: "4545041",
-            cellPhone: 1130454006,
-            height: 168,
-            hip: 78,
-            waist: 68,
-            heelSize: 10,
-            size: 40
-        }).catch(function(err) {
-            expect(err).to.have.property('statusCode');
-            expect(err.statusCode).to.equal(400);
-
-            expect(err).to.be.a('object');
-            expect(err).to.have.property('message');
-            expect(err.message).to.equal('A string is required to postalCode, the string format need be similar to this 00000-000');
-
-            done();
-        });
-    });
 
     it('Expected a failure when client email is null', function(done) {
         Client.create({
